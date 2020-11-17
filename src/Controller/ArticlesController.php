@@ -16,6 +16,7 @@ class ArticlesController extends AppController
     {
         $articles = $this->Paginator->paginate($this->Articles->find());
         $this->set(compact('articles'));
+        pj($articles);
     }
 
     public function view($slug = null)
@@ -40,5 +41,20 @@ class ArticlesController extends AppController
         }
         $this->set('article', $article);
 
+    }
+
+    public function edit($slug)
+    {
+        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        if ($this->request->is(['post', 'put'])) {
+            $this->Articles->patchEntity($article, $this->request->getData());
+            if ($this->Articles->save($article)) {
+                $this->Flash->success(__('Your article has been updated.'));
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('Your article has been updated.'));
+        }
+
+        $this->set('article', $article);
     }
 }
