@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Utility\Text;
+use Cake\Validation\Validator;
 
 class ArticlesTable extends Table
 {
@@ -17,5 +18,21 @@ class ArticlesTable extends Table
             $sluggedTitle = Text::slug($entity->title);
             $entity->slug = substr($sluggedTitle, 0, 191);
         }
+    }
+
+    /**
+     * Saveメソッドが呼ばれた際にデータの検証方法をCakePHPに伝える
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator
+            ->allowEmptyString('title', false)
+            ->minLength('title', 10)
+            ->maxLength('tiyle', 255)
+
+            ->allowEmptyString('body', false)
+            ->minLength('body', 10);
+
+        return $validator;
     }
 }

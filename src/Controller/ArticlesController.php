@@ -16,7 +16,6 @@ class ArticlesController extends AppController
     {
         $articles = $this->Paginator->paginate($this->Articles->find());
         $this->set(compact('articles'));
-        pj($articles);
     }
 
     public function view($slug = null)
@@ -52,9 +51,20 @@ class ArticlesController extends AppController
                 $this->Flash->success(__('Your article has been updated.'));
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Your article has been updated.'));
+            $this->Flash->error(__('Unable to add your article.'));
         }
 
         $this->set('article', $article);
+    }
+
+    public function delete($slug)
+    {
+        $this->request->allowMethod('post', 'delete');
+
+        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        if ($this->Articles->delete($article)) {
+            $this->Flash->success(__('The {0} article has been deleted.', $article->title));
+            return $this->redirect(['action' => 'index']);
+        }1
     }
 }
