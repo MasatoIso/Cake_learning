@@ -77,6 +77,7 @@ class ArticlesController extends AppController
     public function tags()
     {
         $tags = $this->request->getParam('pass');
+        // カスタムファインダーtaggedを使う
         $articles  = $this->Articles->find('tagged', [
             'tags' => $tags
         ]);
