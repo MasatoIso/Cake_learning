@@ -12,6 +12,7 @@ class ArticlesTable extends Table
     {
         $this->addBehavior('Timestamp');
         $this->belongsToMany('tags');
+        $this->belongsTo('users');
     }
 
     public function beforeSave($event, $entity, $options)
