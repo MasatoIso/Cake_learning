@@ -62,7 +62,7 @@ class DatabasesController extends AppController
             ->contain(['users'])
             ->toArray();
         
-        
+        // containに条件を指定する
         $contain_condition_query = $Articles->find()
             ->where(['Articles.id' => 1])
             ->contain('Tags', function (Query $q) {
@@ -71,7 +71,18 @@ class DatabasesController extends AppController
                     ->where(['Tags.id' => 1]);
             })
             ->toArray();
-        exit(pr($contain_condition_query));
+        
+        // matchingによるArticlesのフィルタリング
+        $matching_query = $Articles->find()
+            ->matching('Tags', function ($q) {
+                return $q->where(['Tags.title' => 'tag1']);
+            });
+        
+        // innerJoinWithを使えば関連テーブルのデータが結果セットに含まれなくなる
+        $inner_join_query = $Articles->find()
+            ->innerJoinWith('Tags', function ($q) {
+                return $q->where(['Tags.title' => 'tag1']);
+            });
     }
 
 }
